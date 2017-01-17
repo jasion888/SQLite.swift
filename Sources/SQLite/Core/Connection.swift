@@ -22,12 +22,14 @@
 // THE SOFTWARE.
 //
 
-import Foundation.NSUUID
+import Foundation
 import Dispatch
 #if SQLITE_SWIFT_STANDALONE
 import sqlite3
 #elseif SQLITE_SWIFT_SQLCIPHER
 import SQLCipher
+#elseif os(Linux)
+import CSQLiteLinux
 #else
 import CSQLite
 #endif
@@ -413,7 +415,7 @@ public final class Connection {
     ///
     ///       db.trace { SQL in print(SQL) }
     public func trace(_ callback: ((String) -> Void)?) {
-        #if SQLITE_SWIFT_SQLCIPHER
+        #if SQLITE_SWIFT_SQLCIPHER || os(Linux)
             trace_v1(callback)
         #else
             if #available(iOS 10.0, OSX 10.12, tvOS 10.0, watchOS 3.0, *) {
@@ -719,7 +721,7 @@ extension Result : CustomStringConvertible {
     }
 }
 
-#if !SQLITE_SWIFT_SQLCIPHER
+#if !SQLITE_SWIFT_SQLCIPHER && !os(Linux)
 @available(iOS 10.0, OSX 10.12, tvOS 10.0, watchOS 3.0, *)
 extension Connection {
     fileprivate func trace_v2(_ callback: ((String) -> Void)?) {

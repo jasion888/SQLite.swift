@@ -1,15 +1,24 @@
 import XCTest
+import Foundation
+import Dispatch
 @testable import SQLite
 
 #if SQLITE_SWIFT_STANDALONE
 import sqlite3
 #elseif SQLITE_SWIFT_SQLCIPHER
 import SQLCipher
+#elseif os(Linux)
+import CSQLiteLinux
 #else
 import CSQLite
 #endif
 
 class ConnectionTests : SQLiteTestCase {
+    static var allTests = {
+	return [
+	  ("test_init_withInMemory_returnsInMemoryConnection", test_init_withInMemory_returnsInMemoryConnection)
+	]
+    }()
 
     override func setUp() {
         super.setUp()
@@ -336,7 +345,7 @@ class ConnectionTests : SQLiteTestCase {
         let stmt = try! db.prepare("SELECT *, sleep(?) FROM users", 0.1)
         try! stmt.run()
 
-        let deadline = DispatchTime.now() + Double(Int64(10 * NSEC_PER_MSEC)) / Double(NSEC_PER_SEC)
+	let deadline = DispatchTime.now() + 0.01
         _ = DispatchQueue.global(priority: .background).asyncAfter(deadline: deadline, execute: db.interrupt)
         AssertThrows(try stmt.run())
     }
