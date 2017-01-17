@@ -1,3 +1,6 @@
+os:
+  - linux
+  - osx
 language: objective-c
 rvm: 2.2
 osx_image: xcode8.2
@@ -6,17 +9,30 @@ env:
     - IOS_SIMULATOR="iPhone 6s"
 matrix:
   include:
-    - env: BUILD_SCHEME="SQLite iOS"
-    - env: BUILD_SCHEME="SQLite Mac"
-    - env: VALIDATOR_SUBSPEC="none"
-    - env: VALIDATOR_SUBSPEC="standard"
-    - env: VALIDATOR_SUBSPEC="standalone"
-    - env: VALIDATOR_SUBSPEC="SQLCipher"
-    - env: CARTHAGE_PLATFORM="iOS"
-    - env: CARTHAGE_PLATFORM="Mac"
-    - env: CARTHAGE_PLATFORM="watchOS"
-    - env: CARTHAGE_PLATFORM="tvOS"
-    - env: PACKAGE_MANAGER_COMMAND="test -Xlinker -lsqlite3"
+    - os: osx
+      env: BUILD_SCHEME="SQLite iOS"
+    - os: osx
+      env: BUILD_SCHEME="SQLite Mac"
+    - os: osx
+      env: VALIDATOR_SUBSPEC="none"
+    - os: osx
+      env: VALIDATOR_SUBSPEC="standard"
+    - os: osx
+      env: VALIDATOR_SUBSPEC="standalone"
+    - os: osx
+      env: VALIDATOR_SUBSPEC="SQLCipher"
+    - os: osx
+      env: CARTHAGE_PLATFORM="iOS"
+    - os: osx
+      env: CARTHAGE_PLATFORM="Mac"
+    - os: osx
+      env: CARTHAGE_PLATFORM="watchOS"
+    - os: osx
+      env: CARTHAGE_PLATFORM="tvOS"
+    - os: osx
+      env: PACKAGE_MANAGER_COMMAND="test -Xlinker -lsqlite3"
+    - os: linux
+      env: PACKAGE_MANAGER_COMMAND="test -Xlinker -lsqlite3"
 before_install:
   - gem update bundler
   - gem install xcpretty --no-document
