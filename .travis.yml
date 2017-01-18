@@ -6,6 +6,7 @@ osx_image: xcode8.2
 env:
   global:
     - IOS_SIMULATOR="iPhone 6s"
+    - LINUX_SWIFT_RELEASE="https://swift.org/builds/swift-3.0.2-release/ubuntu1404/swift-3.0.2-RELEASE/swift-3.0.2-RELEASE-ubuntu14.04.tar.gz"
 matrix:
   include:
     - os: osx
@@ -33,9 +34,10 @@ matrix:
     - os: linux
       env: PACKAGE_MANAGER_COMMAND="test -Xlinker -lsqlite3"
 before_install:
-  - gem update bundler
-  - gem install xcpretty --no-document
-  - brew update
-  - brew outdated carthage || brew upgrade carthage
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then gem update bundler; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then gem install xcpretty --no-document; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew outdated carthage || brew upgrade carthage; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then curl "$LINUX_SWIFT_RELEASE" | tar x; fi
 script:
   - ./run-tests.sh
