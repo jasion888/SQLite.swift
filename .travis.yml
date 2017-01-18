@@ -1,7 +1,6 @@
 os:
   - linux
   - osx
-language: objective-c
 rvm: 2.2
 osx_image: xcode8.2
 env:
